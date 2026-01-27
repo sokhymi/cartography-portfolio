@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coastal Eutrophication Report</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -99,7 +99,7 @@
         margin: 40px 0;
         background-color: #f9fbf9;
         border-radius: 12px;
-        border: 1px solid rgba(0,0,0,0.05);
+        border: 1px solid rgba(0, 0, 0, 0.05);
         padding: 20px;
         overflow-x: auto; /* Allows scrolling if map is wider than screen */
       }
@@ -111,7 +111,6 @@
         border-radius: 8px;
       }
 
-      /* --- FOOTER --- */
       .report-meta {
         margin-top: 40px;
         padding-top: 20px;
@@ -133,22 +132,45 @@
   </head>
   <body>
     <header>
-      <div class="logo"> Advanced Cartography</div>
-      <div style="font-weight: 600; font-size: 0.9rem">
-        Bilegjargal Bold
-      </div>
+      <div class="logo">WIP DRAFT</div>
+      <div style="font-weight: 600; font-size: 0.9rem">Bilegjargal Bold</div>
     </header>
 
     <main class="report-container">
       <div class="report-card">
         <span class="badge" style="display: table; margin: 0 auto 20px auto"
-          >End-of-semester portfolio</span
+          >End-of-semester portfolio for class Advanced Cartography</span
         >
         <h1>Coastal nitrogen pollution in Europe</h1>
+
+        <p class="subtitle">
+          The initial map created using QGIS turned out as depicted below.
+          Possible critique included the consideration of "inland" borders
+          (where virtually no algal blooms occur), which was removed in the
+          later Leaflet webmap.
+        </p>
+
+        <center>
+        <img src="qgis_map.png" alt="Initial map made with QGIS" width="705", height="500", border=2>
+        </center>
+        <br/>
+
+        <p class="subtitle">
+          The eye-tracking study with RealEye yielded the following heatmap.
+          The concentration on Europe and its higher values was expected of the map.
+        </p>
+
+        <center>
+        <img src="heatmap.png" alt="Eye-tracking study with RealEye" width="705", height="500", border=2>
+        </center>
+        <br/>
+
         <p class="subtitle">
           The following Leaflet map details the concentration of nitrogen in
-          coastal waters (mcmol/liter²). Excessive nitrogen levels lead to eutrophication, 
-          harming marine biodiversity and coastal ecosystems.
+          coastal waters (mcmol/liter²), again by country. Hover on coastal
+          areas to see the concentration levels in mcmol/liter² (in accordance
+          with the data provided by the UN) or click on a country to see the
+          state of nitrogen pollution, by state.
         </p>
 
         <div class="map-wrapper">
@@ -156,12 +178,11 @@
         </div>
 
         <div class="report-meta">
-          <div>
-          </div>
+          <div></div>
           <div style="text-align: right">
             <strong>Data availability:</strong> 16 countries in Europe. <br />
-            Data is aggregated by country: more precise <br />coordinates by measurement station
-            may be required.
+            Data is aggregated by country: more precise <br />coordinates by
+            measurement station may be required.
           </div>
         </div>
       </div>
@@ -300,7 +321,7 @@
       info.update = function (props) {
         const contents = props
           ? `<b>${props.NAME_ENGL}</b><br />${props.Amount.toString().substring(0, 7)} mcmol / liter<sup>2</sup>`
-          : "Hover & click on a coastal area";
+          : "Hover over a coastal area";
         this._div.innerHTML = `<h4>Coastal nitrogen concentration</h4>${contents}`;
       };
 
@@ -424,7 +445,7 @@
       details.update = function (props) {
         const contents = props
           ? `<b>${props.NAME_ENGL}</b><br />${props.CountrySpecificText}`
-          : "Hover & click on a coastal area";
+          : "Click on a coastal area";
         this._div.innerHTML = `<h4>Country details</h4>${contents}`;
       };
 
@@ -435,8 +456,6 @@
     </textarea>
 
     <script>
-      // This script extracts your unmodified HTML from the textarea above
-      // and injects it into the iframe.
       const userCode = document.getElementById("user-provided-code").value;
       const iframe = document.getElementById("report-map-frame");
       iframe.srcdoc = userCode;
