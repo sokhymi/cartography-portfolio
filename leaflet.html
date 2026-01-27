@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Coastal Eutrophication by Country</title>
+
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="docs/images/favicon.ico"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      .leaflet-container {
+        height: 400px;
+        width: 600px;
+        max-width: 100%;
+        max-height: 100%;
+      }
+    </style>
+
+    <style>
+      #map {
+        width: 800px;
+        height: 500px;
+      }
+      .info {
+        padding: 6px 8px;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+      }
+      .info h4 {
+        margin: 0 0 5px;
+        color: #5c5c5c;
+        font-family: "Manrope", sans-serif;
+      }
+
+      .info b {
+        font-family: "Manrope", sans-serif;
+      }
+
+      .legend {
+        text-align: left;
+        line-height: 18px;
+        color: #555;
+      }
+      .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+      }
+      .map-title {
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 20px;
+        font-family: "Manrope", sans-serif;
+        color: #5c5c5c;
+      }
+
+      .details {
+        padding: 6px 8px;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+      }
+      .details h4 {
+        margin: 0 0 5px;
+        color: #5c5c5c;
+        font-family: "Manrope", sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map" style="width: 1000px; height: 100%"></div>
+    <script>
+      let geoLayer;
+
+      const map = L.map("map", {
+        zoomSnap: 0.5,
+      }).setView([53.818113518906195, 2.88607961393051], 3.5);
+
+      const tiles = L.tileLayer(
+        "https://api.mapbox.com/styles/v1/sokhymera/cky2jymkf0ta114kymd5a2wk9/tiles/{tileSize}/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic29raHltZXJhIiwiYSI6ImNtajhpZm03OTAwazkzaXIzb2NjMWpzeTYifQ.rXpcYv8_7Fx9aNhyWEN6SA",
+        {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://mapbox.com">Mapbox</a>',
+        },
+      ).addTo(map);
+
+      const info = L.control();
+
+      info.onAdd = function (map) {
+        this._div = L.DomUtil.create("div", "info");
+        this.update();
+        return this._div;
+      };
+
+      info.update = function (props) {
+        const contents = props
+          ? `<b>${props.NAME_ENGL}</b><br />${props.Amount.toString().substring(0, 7)} mcmol / liter<sup>2</sup>`
+          : "Hover & click on a coastal area";
+        this._div.innerHTML = `<h4>Coastal nitrogen concentration</h4>${contents}`;
+      };
+
+      info.addTo(map);
+
+      function getColor(d) {
+        return d > 6500
+          ? "#05FA19"
+          : d > 2000
+            ? "#04CD15"
+            : d > 1000
+              ? "#03A010"
+              : d > 500
+                ? "#02730C"
+                : d > 100
+                  ? "#014607"
+                  : "#011903";
+      }
+
+      function style(feature) {
+        return {
+          weight: 2,
+          opacity: 1,
+          color: getColor(feature.properties.Amount),
+          fillOpacity: 0.7,
+        };
+      }
+
+      function highlightFeature(e) {
+        const layer = e.target;
+
+        layer.setStyle({
+          weight: 5,
+          color: "#666",
+          dashArray: "",
+          fillOpacity: 0.7,
+        });
+
+        layer.bringToFront();
+
+        info.update(layer.feature.properties);
+      }
+
+      async function loadData() {
+        try {
+          const response = await fetch(
+            "eutrophication_lines1_buffer_difference1.geojson",
+          );
+          const geojsonData = await response.json();
+
+          geoLayer = L.geoJSON(geojsonData, {
+            style: style,
+            onEachFeature,
+          }).addTo(map);
+        } catch (error) {
+          console.error("Error loading the GeoJSON file:", error);
+        }
+      }
+
+      loadData();
+
+      function resetHighlight(e) {
+        geoLayer.resetStyle(e.target);
+        info.update();
+      }
+
+      function zoomToFeature(e) {
+        const layer = e.target;
+        map.fitBounds(layer.getBounds());
+        details.update(layer.feature.properties);
+      }
+
+      function onEachFeature(feature, layer) {
+        layer.on({
+          mouseover: highlightFeature,
+          mouseout: resetHighlight,
+          click: zoomToFeature,
+        });
+      }
+
+      var legend = L.control({ position: "bottomright" });
+
+      legend.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "info legend"),
+          grades = [0, 100, 500, 1000, 2000, 6500],
+          labels = [];
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+            '<i style="background:' +
+            getColor(grades[i] + 1) +
+            '"></i> ' +
+            grades[i] +
+            (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+        }
+
+        return div;
+      };
+
+      legend.addTo(map);
+
+      var title = L.control({ position: "bottomleft" });
+
+      title.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "map-title");
+        div.innerHTML = "Coastal nitrogen pollution";
+        return div;
+      };
+
+      title.addTo(map);
+
+      const details = L.control({ position: "bottomleft" });
+
+      details.onAdd = function (map) {
+        this._div = L.DomUtil.create("div", "info");
+        this.update();
+        return this._div;
+      };
+
+      details.update = function (props) {
+        const contents = props
+          ? `<b>${props.NAME_ENGL}</b><br />${props.CountrySpecificText}`
+          : "Hover & click on a coastal area";
+        this._div.innerHTML = `<h4>Country details</h4>${contents}`;
+      };
+
+      details.addTo(map);
+    </script>
+  </body>
+</html>
