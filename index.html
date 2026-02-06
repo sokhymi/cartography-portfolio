@@ -82,8 +82,17 @@
         text-align: center;
       }
 
-      .subtitle {
+      h2 {
+        font-weight: 600;
+        color: var(--primary-green);
+        margin-top: 0;
+        font-size: 1.75rem;
+        letter-spacing: -1px;
         text-align: center;
+      }
+
+      .subtitle {
+        text-align: left;
         font-size: 1.1rem;
         max-width: 700px;
         margin: 0 auto 40px auto;
@@ -132,7 +141,14 @@
   </head>
   <body>
     <header>
-      <div class="logo">WIP DRAFT</div>
+      <img
+        src="sdg14.png"
+        alt="SDG: 14"
+        width="50px"
+        height="50px"
+        align="center"
+      />
+      <div class="logo">Sustainable Development Goals 14: Life Below Water</div>
       <div style="font-weight: 600; font-size: 0.9rem">Bilegjargal Bold</div>
     </header>
 
@@ -142,12 +158,25 @@
           >End-of-semester portfolio for class Advanced Cartography</span
         >
         <h1>Coastal nitrogen pollution in Europe</h1>
+        <h2>Basis</h2>
 
+        <p class="subtitle">
+          Nitrogen is a major constituent of coastal eutrophication and when
+          uncontrolled, causes harmful algal blooms (HABs) to accumulate.
+          Sustainable Development Goal 14 seeks to onserve and sustainably use
+          the oceans, seas and marine resources for sustainable development.
+        </p>
+        <h2>Initial map</h2>
         <p class="subtitle">
           The initial map created using QGIS turned out as depicted below.
           Possible critique included the consideration of "inland" borders
-          (where virtually no algal blooms occur), which was removed in the
-          later Leaflet webmap.
+          (where algal bloom concentrations are low as opposed to the oceans), 
+          which was removed in the later Leaflet webmap. <br /><br />
+
+          The second cartographic issue that was recognized was the use of the
+          color red: while it does imply negative developments, it does not
+          relate to the problem at hand; algal blooms are associated with
+          stronger green colors in reality.
         </p>
 
         <center>
@@ -162,10 +191,13 @@
           />
         </center>
         <br />
-
+        
+        <h2>Eye-tracking study with RealEye(s realize real lies)</h2>
         <p class="subtitle">
           The eye-tracking study with RealEye yielded the following heatmap. The
           concentration on Europe and its higher values was expected of the map.
+
+          It was considered a real outlier for 
         </p>
 
         <center>
