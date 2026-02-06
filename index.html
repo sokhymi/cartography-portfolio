@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coastal Eutrophication Report</title>
+    <title>Coastal eutrophication in Europe</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -151,19 +151,35 @@
         </p>
 
         <center>
-        <img src="qgis_map.png" alt="Initial map made with QGIS" width="705", height="500", border=2>
+          <img
+            src="qgis_map.png"
+            alt="Initial map made with QGIS"
+            width="705"
+            ,
+            height="500"
+            ,
+            border="2"
+          />
         </center>
-        <br/>
+        <br />
 
         <p class="subtitle">
-          The eye-tracking study with RealEye yielded the following heatmap.
-          The concentration on Europe and its higher values was expected of the map.
+          The eye-tracking study with RealEye yielded the following heatmap. The
+          concentration on Europe and its higher values was expected of the map.
         </p>
 
         <center>
-        <img src="heatmap.png" alt="Eye-tracking study with RealEye" width="705", height="500", border=2>
+          <img
+            src="heatmap.png"
+            alt="Eye-tracking study with RealEye"
+            width="705"
+            ,
+            height="500"
+            ,
+            border="2"
+          />
         </center>
-        <br/>
+        <br />
 
         <p class="subtitle">
           The following Leaflet map details the concentration of nitrogen in
@@ -196,7 +212,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Coastal Eutrophication by Country</title>
+    <title>Coastal eutrophication by country</title>
 
     <link
       rel="shortcut icon"
@@ -291,6 +307,13 @@
         color: #5c5c5c;
         font-family: "Manrope", sans-serif;
       }
+
+      .details-panel {
+        width: 257px;
+        max-width: 100%;
+        max-height: 400px;
+        overflow-y: auto;
+      }
     </style>
   </head>
   <body>
@@ -368,7 +391,7 @@
       async function loadData() {
         try {
           const response = await fetch(
-            "eutrophication_lines1_buffer_difference1.geojson",
+            "eutrophication_lines1_buffer_difference3.geojson",
           );
           const geojsonData = await response.json();
 
@@ -437,7 +460,7 @@
       const details = L.control({ position: "bottomleft" });
 
       details.onAdd = function (map) {
-        this._div = L.DomUtil.create("div", "info");
+        this._div = L.DomUtil.create("div", "info details-panel");
         this.update();
         return this._div;
       };
